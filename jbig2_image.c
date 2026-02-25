@@ -170,7 +170,10 @@ template_image_compose_opt(const uint8_t * JBIG2_RESTRICT ss, uint8_t * JBIG2_RE
     if (bytewidth == 1) {
         for (j = 0; j < h; j++) {
             /* Only 1 byte! */
-            uint8_t v = (((early ? 0 : ss[0]<<8) | (late ? 0 : ss[1]))>>shift);
+            uint8_t s0 = early ? 0 : ss[0];
+            uint8_t s1 = late ? 0 : (early ? ss[0] : ss[1]);
+            uint8_t v = (((s0<<8) | s1)>>shift);
+
             if (op == JBIG2_COMPOSE_OR)
                 *dd |= v & leftmask;
             else if (op == JBIG2_COMPOSE_AND)
@@ -188,10 +191,9 @@ template_image_compose_opt(const uint8_t * JBIG2_RESTRICT ss, uint8_t * JBIG2_RE
     }
     bytewidth -= 2;
     if (shift == 0) {
-        ss++;
         for (j = 0; j < h; j++) {
             /* Left byte */
-            const uint8_t * JBIG2_RESTRICT s = ss;
+            const uint8_t * JBIG2_RESTRICT s = early ? ss : ss + 1;
             uint8_t * JBIG2_RESTRICT d = dd;
             if (op == JBIG2_COMPOSE_OR)
                 *d++ |= *s++ & leftmask;
@@ -236,9 +238,14 @@ template_image_compose_opt(const uint8_t * JBIG2_RESTRICT ss, uint8_t * JBIG2_RE
             const uint8_t * JBIG2_RESTRICT s = ss;
             uint8_t * JBIG2_RESTRICT d = dd;
             uint8_t s0, s1, v;
-            s0 = early ? 0 : *s;
-            s++;
+
+            if (early) {
+                s0 = 0;
+            } else {
+                s0 = *s++;
+            }
             s1 = *s++;
+
             v = ((s0<<8) | s1)>>shift;
             if (op == JBIG2_COMPOSE_OR)
                 *d++ |= v & leftmask;
@@ -378,7 +385,9 @@ jbig2_image_compose(Jbig2Ctx *ctx, Jbig2Image *dst, Jbig2Image *src, int x, int 
     w = src->width;
     h = src->height;
     shift = (x & 7);
-    ss = src->data - early;
+    // Start pointer directly at the data bound.
+    // The template function now securely handles offset reads.
+    ss = src->data;
 
     if (x < 0) {
         if (w < (uint32_t) -x)
