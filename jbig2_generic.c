@@ -657,15 +657,17 @@ jbig2_decode_generic_template2_unopt(Jbig2Ctx *ctx,
         uint32_t out_byte = 0;
         int out_bits_to_go_in_byte = 8;
         uint8_t *d = &image->data[image->stride * y];
-        uint8_t *pline  = &image->data[image->stride * (y-1)];
-        uint8_t *ppline = &image->data[image->stride * (y-2)];
+        uint8_t *pline  = NULL;
+        uint8_t *ppline = NULL;
         uint32_t pd = 0;
         uint32_t ppd = 0;
         if (y > 0) {
+            pline = &image->data[image->stride * (y-1)];
             pd = (*pline++ << 8);
             if (GBW > 8)
                 pd |= *pline++;
             if (y > 1) {
+                ppline = &image->data[image->stride * (y-2)];
                 ppd = (*ppline++ << 8);
                 if (GBW > 8)
                     ppd |= *ppline++;
@@ -847,9 +849,10 @@ jbig2_decode_generic_template3_unopt(Jbig2Ctx *ctx,
         uint32_t out_byte = 0;
         int out_bits_to_go_in_byte = 8;
         uint8_t *d = &image->data[image->stride * y];
-        uint8_t *pline  = &image->data[image->stride * (y-1)];
+        uint8_t *pline = NULL;
         uint32_t pd = 0;
         if (y > 0) {
+            pline = &image->data[image->stride * (y-1)];
             pd = (*pline++ << 8);
             if (GBW > 8)
                 pd |= *pline++;
@@ -934,15 +937,17 @@ jbig2_decode_generic_template0_TPGDON(Jbig2Ctx *ctx,
                 uint32_t out_byte = 0;
                 int out_bits_to_go_in_byte = 8;
                 uint8_t *d = &image->data[image->stride * y];
-                uint8_t *pline  = &image->data[image->stride * (y-1)];
-                uint8_t *ppline = &image->data[image->stride * (y-2)];
+                uint8_t *pline = NULL;
+                uint8_t *ppline = NULL;
                 uint32_t pd = 0;
                 uint32_t ppd = 0;
                 if (y > 0) {
+                    pline = &image->data[image->stride * (y-1)];
                     pd = (*pline++ << 8);
                     if (GBW > 8)
                         pd |= *pline++;
                     if (y > 1) {
+                        ppline = &image->data[image->stride * (y-2)];
                         ppd = (*ppline++ << 8);
                         if (GBW > 8)
                             ppd |= *ppline++;
@@ -1032,15 +1037,17 @@ jbig2_decode_generic_template0_TPGDON(Jbig2Ctx *ctx,
             uint32_t out_byte = 0;
             int out_bits_to_go_in_byte = 8;
             uint8_t *d = &image->data[image->stride * y];
-            uint8_t *pline  = &image->data[image->stride * (y-1)];
-            uint8_t *ppline = &image->data[image->stride * (y-2)];
+            uint8_t *pline = NULL;
+            uint8_t *ppline = NULL;
             uint32_t pd = 0;
             uint32_t ppd = 0;
             if (y > 0) {
+                pline = &image->data[image->stride * (y-1)];
                 pd = (*pline++ << 8);
                 if (GBW > 8)
                     pd |= *pline++;
                 if (y > 1) {
+                    ppline = &image->data[image->stride * (y-2)];
                     ppd = (*ppline++ << 8);
                     if (GBW > 8)
                         ppd |= *ppline++;
@@ -1120,15 +1127,17 @@ jbig2_decode_generic_template1_TPGDON(Jbig2Ctx *ctx,
             uint32_t out_byte = 0;
             int out_bits_to_go_in_byte = 8;
             uint8_t *d = &image->data[image->stride * y];
-            uint8_t *pline  = &image->data[image->stride * (y-1)];
-            uint8_t *ppline = &image->data[image->stride * (y-2)];
+            uint8_t *pline = NULL;
+            uint8_t *ppline = NULL;
             uint32_t pd = 0;
             uint32_t ppd = 0;
             if (y > 0) {
+                pline = &image->data[image->stride * (y-1)];
                 pd = (*pline++ << 8);
                 if (GBW > 8)
                     pd |= *pline++;
                 if (y > 1) {
+                    ppline = &image->data[image->stride * (y-2)];
                     ppd = (*ppline++ << 8);
                     if (GBW > 8)
                         ppd |= *ppline++;
@@ -1195,15 +1204,17 @@ jbig2_decode_generic_template2_TPGDON(Jbig2Ctx *ctx,
             uint32_t out_byte = 0;
             int out_bits_to_go_in_byte = 8;
             uint8_t *d = &image->data[image->stride * y];
-            uint8_t *pline  = &image->data[image->stride * (y-1)];
-            uint8_t *ppline = &image->data[image->stride * (y-2)];
+            uint8_t *pline = NULL;
+            uint8_t *ppline = NULL;
             uint32_t pd = 0;
             uint32_t ppd = 0;
             if (y > 0) {
+                pline = &image->data[image->stride * (y-1)];
                 pd = (*pline++ << 8);
                 if (GBW > 8)
                     pd |= *pline++;
                 if (y > 1) {
+                    ppline = &image->data[image->stride * (y-2)];
                     ppd = (*ppline++ << 8);
                     if (GBW > 8)
                         ppd |= *ppline++;
@@ -1270,9 +1281,10 @@ jbig2_decode_generic_template3_TPGDON(Jbig2Ctx *ctx,
             uint32_t out_byte = 0;
             int out_bits_to_go_in_byte = 8;
             uint8_t *d = &image->data[image->stride * y];
-            uint8_t *pline  = &image->data[image->stride * (y-1)];
+            uint8_t *pline = NULL;
             uint32_t pd = 0;
             if (y > 0) {
+                pline = &image->data[image->stride * (y-1)];
                 pd = (*pline++ << 8);
                 if (GBW > 8)
                     pd |= *pline++;
@@ -1395,7 +1407,7 @@ jbig2_immediate_generic_region(Jbig2Ctx *ctx, Jbig2Segment *segment, const byte 
 {
     Jbig2RegionSegmentInfo rsi;
     byte seg_flags;
-    int8_t gbat[8];
+    int8_t gbat[8] = {0};
     int offset;
     uint32_t gbat_bytes = 0;
     Jbig2GenericRegionParams params;
@@ -1455,8 +1467,8 @@ jbig2_immediate_generic_region(Jbig2Ctx *ctx, Jbig2Segment *segment, const byte 
             jbig2_error(ctx, JBIG2_SEVERITY_WARNING, segment->number, "ignoring %u x %u region at (%u, %u) outside of stripe at row %u covering %u rows, on page of height %u", rsi.width, rsi.height, rsi.x, rsi.y, page->end_row, page->stripe_size, page->image->height);
             return 0;
         }
-        if (height > page->end_row + page->stripe_size) {
-            height = page->end_row + page->stripe_size;
+        if (height > page->end_row + page->stripe_size - rsi.y) {
+            height = page->end_row + page->stripe_size - rsi.y;
         }
     } else {
         if (rsi.y >= page->height) {
@@ -1491,7 +1503,7 @@ jbig2_immediate_generic_region(Jbig2Ctx *ctx, Jbig2Segment *segment, const byte 
             code = jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "failed to allocate arithmetic decoder states when handling immediate generic region");
             goto cleanup;
         }
-        memset(GB_stats, 0, stats_size);
+        memset(GB_stats, 0, stats_size * sizeof(Jbig2ArithCx));
 
         ws = jbig2_word_stream_buf_new(ctx, segment_data + offset, segment->data_length - offset);
         if (ws == NULL) {
