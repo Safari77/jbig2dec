@@ -143,6 +143,12 @@ jbig2_decode_pattern_dict(Jbig2Ctx *ctx, Jbig2Segment *segment,
     Jbig2GenericRegionParams rparams;
     int code = 0;
 
+    // check width value before jbig2_image_new()
+    if ((uint64_t)params->HDPW * ((uint64_t)params->GRAYMAX + 1) > INT32_MAX) {
+        jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "segment width too long to OOM");
+        return NULL;
+    }
+
     /* allocate the collective image */
     image = jbig2_image_new(ctx, params->HDPW * (params->GRAYMAX + 1), params->HDPH);
     if (image == NULL) {
