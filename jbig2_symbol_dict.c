@@ -266,6 +266,12 @@ jbig2_decode_symbol_dict(Jbig2Ctx *ctx,
 
     memset(&tparams, 0, sizeof(tparams));
 
+    /* Prevent overflow on SDNEWSYMS array allocation */
+    if (params->SDNUMNEWSYMS > SIZE_MAX / sizeof(uint32_t)) {
+        jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "too many new symbols (integer overflow)");
+        return NULL;
+    }
+
     /* 6.5.5 (3) */
     HCHEIGHT = 0;
     NSYMSDECODED = 0;
@@ -687,6 +693,12 @@ jbig2_decode_symbol_dict(Jbig2Ctx *ctx,
                 const byte *src = data + jbig2_huffman_offset(hs);
                 const int stride = (image->width >> 3) + ((image->width & 7) ? 1 : 0);
                 byte *dst = image->data;
+
+                /* Prevent overflow when calculating uncompressed size */
+                if (stride > 0 && image->height > SIZE_MAX / stride) {
+                    jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "image dimensions too large for uncompressed bitmap (integer overflow)");
+                    goto cleanup;
+                }
 
                 /* SumatraPDF: prevent read access violation */
                 if (size < jbig2_huffman_offset(hs) || (size - jbig2_huffman_offset(hs) < (size_t) image->height * stride) || (size < jbig2_huffman_offset(hs))) {
