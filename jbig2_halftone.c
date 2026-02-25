@@ -607,6 +607,11 @@ jbig2_halftone_region(Jbig2Ctx *ctx, Jbig2Segment *segment, const byte *segment_
     params.HGY = jbig2_get_int32(segment_data + offset + 12);
     offset += 16;
 
+    if (params.HGW > 65535 || params.HGH > 65535) {
+        return jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number,
+                           "halftone grid dimensions too large");
+    }
+
     /* 7.4.5.1.3 Figure 44 */
     if (segment->data_length - offset < 4)
         goto too_short;
