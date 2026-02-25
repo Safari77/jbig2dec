@@ -70,7 +70,7 @@ jbig2_decode_mmr_init(Jbig2MmrCtx *mmr, int width, int height, const byte *data,
 
     while (mmr->bit_index >= 8 && mmr->data_index < mmr->size) {
         mmr->bit_index -= 8;
-        mmr->word |= (mmr->data[mmr->data_index] << mmr->bit_index);
+        mmr->word |= ((uint32_t)mmr->data[mmr->data_index] << mmr->bit_index);
         mmr->data_index++;
     }
 }
@@ -86,7 +86,7 @@ jbig2_decode_mmr_consume(Jbig2MmrCtx *mmr, int n_bits)
     mmr->bit_index += n_bits;
     while (mmr->bit_index >= 8 && mmr->data_index < mmr->size) {
         mmr->bit_index -= 8;
-        mmr->word |= (mmr->data[mmr->data_index] << mmr->bit_index);
+        mmr->word |= ((uint32_t)mmr->data[mmr->data_index] << mmr->bit_index);
         mmr->data_index++;
     }
 }
@@ -752,7 +752,7 @@ const mmr_table_node jbig2_mmr_black_decode[] = {
  * addresses.
  */
 #define getword16(b)  ((uint16_t)(b[0] | (b[1] << 8)))
-#define getword32(b)  ((uint32_t)(getword16(b) | (getword16((b + 2)) << 16)))
+#define getword32(b)  ((uint32_t)(getword16(b) | ((uint32_t)getword16((b + 2)) << 16)))
 
 static uint32_t
 jbig2_find_changing_element(const byte *line, uint32_t x, uint32_t w)

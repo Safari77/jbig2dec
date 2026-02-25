@@ -397,15 +397,15 @@ test_get_word(Jbig2Ctx *ctx, Jbig2WordStream *self, size_t offset, uint32_t *wor
         return 0;
 
     if (offset < sizeof(test_stream)) {
-        val |= test_stream[offset] << 24;
+        val |= (uint32_t)test_stream[offset] << 24;
         ret++;
     }
     if (offset + 1 < sizeof(test_stream)) {
-        val |= test_stream[offset + 1] << 16;
+        val |= (uint32_t)test_stream[offset + 1] << 16;
         ret++;
     }
     if (offset + 2 < sizeof(test_stream)) {
-        val |= test_stream[offset + 2] << 8;
+        val |= (uint32_t)test_stream[offset + 2] << 8;
         ret++;
     }
     if (offset + 3 < sizeof(test_stream)) {
