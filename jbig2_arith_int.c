@@ -59,7 +59,7 @@ jbig2_arith_int_decode(Jbig2Ctx *ctx, Jbig2ArithIntCtx *actx, Jbig2ArithState *a
     Jbig2ArithCx *IAx = actx->IAx;
     int PREV = 1;
     int S;
-    int32_t V;
+    uint32_t V;
     int bit;
     int n_tail, offset;
     int i;
@@ -132,12 +132,11 @@ jbig2_arith_int_decode(Jbig2Ctx *ctx, Jbig2ArithIntCtx *actx, Jbig2ArithState *a
 
     /* offset is always >=0, so underflow can't happen. */
     /* avoid overflow by clamping 32 bit value. */
-    if (V > INT32_MAX - offset)
+    if (V > (uint32_t)INT32_MAX - offset)
         V = INT32_MAX;
     else
         V += offset;
-    V = S ? -V : V;
-    *p_result = V;
+     *p_result = S ? -(int32_t)V : (int32_t)V;
     return S && V == 0 ? 1 : 0;
 }
 
