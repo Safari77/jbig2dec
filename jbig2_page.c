@@ -213,6 +213,9 @@ jbig2_complete_page(Jbig2Ctx *ctx)
            set to -1. Try to cope with this here. */
         if ((segment->data_length & 0xffffffff) == 0xffffffff) {
             jbig2_error(ctx, JBIG2_SEVERITY_WARNING, segment->number, "file has an invalid segment data length; trying to decode using the available data");
+            if (ctx->buf_wr_ix < ctx->buf_rd_ix) {
+                return jbig2_error(ctx, JBIG2_SEVERITY_WARNING, segment->number, "invalid buffer indices");
+            }
             segment->data_length = ctx->buf_wr_ix - ctx->buf_rd_ix;
             code = jbig2_parse_segment(ctx, segment, ctx->buf + ctx->buf_rd_ix);
             ctx->buf_rd_ix += segment->data_length;
