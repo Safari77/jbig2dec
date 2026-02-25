@@ -78,15 +78,26 @@ jbig2_page_info(Jbig2Ctx *ctx, Jbig2Segment *segment, const uint8_t *segment_dat
         while (ctx->pages[index].state != JBIG2_PAGE_FREE) {
             index++;
             if (index >= ctx->max_page_index) {
-                /* grow the list */
+                /* grow the list safely avoiding both 32-bit and size_t overflows.
+                 * cap to whichever limit is smaller:
+                 *   - UINT32_MAX (max value of the page index type)
+                 *   - SIZE_MAX / sizeof(Jbig2Page) (max allocation the system can handle)
+                 */
+                uint32_t alloc_limit = (uint32_t)(SIZE_MAX / sizeof(Jbig2Page));
+                uint32_t max_safe_pages = (alloc_limit < UINT32_MAX)
+                                          ? alloc_limit
+                                          : UINT32_MAX;
 
-                if (ctx->max_page_index == UINT32_MAX) {
-                    return jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "too many pages in jbig2 image");
+                if (ctx->max_page_index >= max_safe_pages) {
+                    return jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number,
+                                       "too many pages in jbig2 image");
                 }
-                else if (ctx->max_page_index > (UINT32_MAX >> 2)) {
-                    ctx->max_page_index = UINT32_MAX;
+
+                /* quadruple the page list, but clamp to the safe maximum */
+                if (ctx->max_page_index > max_safe_pages / 4) {
+                    ctx->max_page_index = max_safe_pages;
                 } else {
-                    ctx->max_page_index <<= 2;
+                    ctx->max_page_index *= 4;
                 }
 
                 pages = jbig2_renew(ctx, ctx->pages, Jbig2Page, ctx->max_page_index);
