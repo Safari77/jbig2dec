@@ -1086,7 +1086,7 @@ jbig2_decode_mmr_line(Jbig2Ctx *ctx, Jbig2MmrCtx *mmr, const byte *ref, byte *ds
             /* printf ("VR(1)\n"); */
             jbig2_decode_mmr_consume(mmr, 3);
             b1 = jbig2_find_changing_element_of_color(ref, a0, mmr->width, !c);
-            if (b1 + 1 <= mmr->width)
+            if (mmr->width >= 1 && b1 <= mmr->width - 1)
                 b1 += 1;
             if (c) {
                 if (b1 < a0) {
@@ -1104,7 +1104,7 @@ jbig2_decode_mmr_line(Jbig2Ctx *ctx, Jbig2MmrCtx *mmr, const byte *ref, byte *ds
             /* printf ("VR(2)\n"); */
             jbig2_decode_mmr_consume(mmr, 6);
             b1 = jbig2_find_changing_element_of_color(ref, a0, mmr->width, !c);
-            if (b1 + 2 <= mmr->width)
+            if (mmr->width >= 2 && b1 <= mmr->width - 2)
                 b1 += 2;
             if (c) {
                 if (b1 < a0) {
@@ -1122,7 +1122,7 @@ jbig2_decode_mmr_line(Jbig2Ctx *ctx, Jbig2MmrCtx *mmr, const byte *ref, byte *ds
             /* printf ("VR(3)\n"); */
             jbig2_decode_mmr_consume(mmr, 7);
             b1 = jbig2_find_changing_element_of_color(ref, a0, mmr->width, !c);
-            if (b1 + 3 <= mmr->width)
+            if (mmr->width >= 3 && b1 <= mmr->width - 3)
                 b1 += 3;
             if (c) {
                 if (b1 < a0) {
