@@ -281,7 +281,8 @@ jbig2_decode_gray_scale_image(Jbig2Ctx *ctx, Jbig2Segment *segment,
 {
     uint16_t **GSVALS = NULL;
     size_t consumed_bytes = 0;
-    uint32_t i, j, stride, x, y;
+    uint32_t j, stride, x, y;
+    size_t i;
     int code;
     Jbig2Image **GSPLANES;
     Jbig2GenericRegionParams rparams;
@@ -365,7 +366,7 @@ jbig2_decode_gray_scale_image(Jbig2Ctx *ctx, Jbig2Segment *segment,
          * for each [x,y]
          * GSPLANES[j][x][y] = GSPLANES[j+1][x][y] XOR GSPLANES[j][x][y] */
         stride = GSPLANES[j]->stride;
-        for (i = 0; i < stride * GSH; ++i)
+        for (i = 0; i < (size_t)stride * GSH; ++i)
             GSPLANES[j]->data[i] ^= GSPLANES[j + 1]->data[i];
 
         /*  C.5 step 3. (c) */
@@ -377,7 +378,7 @@ jbig2_decode_gray_scale_image(Jbig2Ctx *ctx, Jbig2Segment *segment,
         jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "failed to allocate GSVALS: %d bytes", GSW);
         goto cleanup;
     }
-    for (i = 0; i < GSW; ++i) {
+    for (i = 0; (size_t)i < GSW; ++i) {
         GSVALS[i] = jbig2_new(ctx, uint16_t, GSH);
         if (GSVALS[i] == NULL) {
             jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "failed to allocate GSVALS: %d bytes", GSH * GSW);
