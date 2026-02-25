@@ -200,7 +200,7 @@ jbig2_get_uint16(const byte *bptr)
 int32_t
 jbig2_get_int32(const byte *bptr)
 {
-    return ((int32_t) get_int16(bptr) << 16) | get_uint16(bptr + 2);
+    return (int32_t)(((uint32_t) get_uint16(bptr) << 16) | get_uint16(bptr + 2));
 }
 
 /* coverity[ -tainted_data_return ] */
