@@ -97,6 +97,12 @@ jbig2_sd_new(Jbig2Ctx *ctx, uint32_t n_symbols)
 {
     Jbig2SymbolDict *new_dict = NULL;
 
+    /* Prevent integer overflow on 32-bit platforms */
+    if (n_symbols > SIZE_MAX / sizeof(Jbig2Image *)) {
+        jbig2_error(ctx, JBIG2_SEVERITY_FATAL, JBIG2_UNKNOWN_SEGMENT_NUMBER, "requested too many symbols (integer overflow)");
+        return NULL;
+    }
+
     new_dict = jbig2_new(ctx, Jbig2SymbolDict, 1);
     if (new_dict != NULL) {
         new_dict->glyphs = jbig2_new(ctx, Jbig2Image *, n_symbols);
