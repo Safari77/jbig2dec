@@ -97,11 +97,13 @@ jbig2_sd_new(Jbig2Ctx *ctx, uint32_t n_symbols)
 {
     Jbig2SymbolDict *new_dict = NULL;
 
+#if SIZE_MAX <= 0xFFFFFFFFU
     /* Prevent integer overflow on 32-bit platforms */
     if (n_symbols > SIZE_MAX / sizeof(Jbig2Image *)) {
         jbig2_error(ctx, JBIG2_SEVERITY_FATAL, JBIG2_UNKNOWN_SEGMENT_NUMBER, "requested too many symbols (integer overflow)");
         return NULL;
     }
+#endif
 
     new_dict = jbig2_new(ctx, Jbig2SymbolDict, 1);
     if (new_dict != NULL) {
@@ -266,11 +268,13 @@ jbig2_decode_symbol_dict(Jbig2Ctx *ctx,
 
     memset(&tparams, 0, sizeof(tparams));
 
+#if SIZE_MAX <= 0xFFFFFFFFU
     /* Prevent overflow on SDNEWSYMS array allocation */
     if (params->SDNUMNEWSYMS > SIZE_MAX / sizeof(uint32_t)) {
         jbig2_error(ctx, JBIG2_SEVERITY_FATAL, segment->number, "too many new symbols (integer overflow)");
         return NULL;
     }
+#endif
 
     /* 6.5.5 (3) */
     HCHEIGHT = 0;
