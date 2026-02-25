@@ -347,6 +347,10 @@ cleanup1:
             if (ID >= SBNUMSYMS) {
                 jbig2_error(ctx, JBIG2_SEVERITY_WARNING, segment->number, "ignoring out of range symbol ID (%d/%d)", ID, SBNUMSYMS);
                 IB = NULL;
+                if (params->SBNUMINSTANCES - NINSTANCES > 0x800) {
+                    /* Following Poppler, don't loop too many times with damaged JBIg2 streams. */
+                    goto cleanup2;
+                }
             } else {
                 /* (3c.v) / 6.4.11 - look up the symbol bitmap IB */
                 uint32_t id = ID;
