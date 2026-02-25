@@ -789,11 +789,13 @@ jbig2_find_changing_element(const byte *line, uint32_t x, uint32_t w)
     if ( ((uint8_t*) line)[ x / 8] == all8) {
         /* Don't bother checking individual bits if the enclosing uint8 equals
         all8 - just move to the next byte. */
-        x = x / 8 * 8 + 8;
-        if (x >= w) {
+        uint32_t next_x = (x / 8) * 8 + 8;
+        /* Check for integer overflow and bounds */
+        if (next_x < x || next_x >= w) {
             x = w;
             goto end;
         }
+        x = next_x;
     } else {
         for(;;) {
             if (x == w) {
