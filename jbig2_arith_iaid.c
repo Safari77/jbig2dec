@@ -95,14 +95,14 @@ jbig2_arith_iaid_decode(Jbig2Ctx *ctx, Jbig2ArithIaidCtx *actx, Jbig2ArithState 
 #ifdef VERBOSE
         fprintf(stderr, "IAID%x: D = %d\n", PREV, D);
 #endif
-        PREV = (PREV << 1) | D;
+        PREV = (PREV << 1) | (uint32_t)D;
     }
     /* A.3 (3) */
     PREV -= 1U << SBSYMCODELEN;
 #ifdef VERBOSE
     fprintf(stderr, "IAID result: %d\n", PREV);
 #endif
-    *p_result = PREV;
+    *p_result = (int)PREV;
     return 0;
 }
 
